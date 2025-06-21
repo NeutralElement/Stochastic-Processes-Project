@@ -1,0 +1,99 @@
+\documentclass[10pt,letterpaper]{article} 
+
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{amssymb,amsmath,latexsym,amsthm,amsfonts,bbm,dsfont}
+\usepackage{bbold}
+\usepackage{parallel}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage[top=1.5cm, left=1in, right=1in, bottom =1in]{geometry}
+\usepackage{hyperref}
+\newcommand\sbullet[1][.5]{\mathbin{\vcenter{\hbox{\scalebox{#1}{$\bullet$}}}}}
+\usepackage{cancel}
+\usepackage{subfigure}
+
+\usepackage[authoryear]{natbib}
+%\bibliographystyle{apalike-es}
+\bibliographystyle{apalike}
+
+\newcommand{\p}{\mathds{P}}
+\newcommand{\E}{\mathds{E}}
+\newcommand{\V}{\mathds{V}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\e}{\mathbf{e}}
+
+\newcount\problemas
+\problemas=0
+\def\prob{\par\medskip \advance\problemas by1{\bf \noindent P\the\problemas}\ }
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Proposal}
+\rhead{PII402}
+\cfoot{\thepage}
+
+\setlength{\headheight}{61pt}
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+\includegraphics[width=3.4cm]{logousm.jpg}
+\end{center}
+
+\vskip 0.5cm
+
+\begin{center}
+\textbf{\large Proposal: \\ An estimation of the convergence time to the steady-state\\
+of a Stackelberg game using Markov Chains \medskip \\ 
+PII402: Stocastic Processes\medskip \\
+Semester 2025-1\\
+Nicolás Boyardi Alache}
+\end{center}
+
+\noindent
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section*{Summary}
+In Game Theory, more precisely in Security Games, Stackelberg Games are used to represent problems involving 2 or more actors under a hierarchical relationship between them. This setting is useful to, in particular, model the problem (from the perspective of an authority) of evasion in public transport systems \citep{FareInspection} \citep{BROTCORNE20211}.\par
+In the aforementioned papers it is discussed thoroughly the necessity of the operational implementation of the probabilities of inspection in public transportation systems, obtained by solving a multi-level optimization problem. This problem solves simultaneously the minimization of the evasion and the minimization of risk of the opportunistic passengers in being inspected.\par
+In particular, it is of interest to know how much time (days) it will take to the evasion rate to converge to the one obtained through the steady-state probabilities obtained during optimization. Monte Carlo simulations were done in order to estimate this time in the papers cited previously. This approach has a latent problem. There is no \textit{a priori} knowledge of how much time the simulation has to run in order to converge. So, in not-so-rare cases it could take more than one year time in instances, making this evasion rate both useless (as this needs to be implemented in mid term) and expensive, because these simulations are costly.\par
+This work aims to establish a second method to obtain the time it should take the evasion rate converge to the theoretical steady-state one via Markov Chains. Specifically, this work seeks to construct a Markov Chain that permits to deduce, or approximate, this convergence time.\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Background}
+The papers cited earlier are mostly works in which my Master's advisor had a mayor role developing the core ideas. As his student, I, too, am quite familiar with the subject of Security Games, in particular using a Stackelberg Games approach to model optimization multi-level problems. This allows me to say safely that all the major requirements for this project will be met satisfactorily. In particular, the most important detail to consider before selecting a particular case to apply Markov Chains in order to obtain new information, is precisely knowing beforehand how possible is to construct said Markov Chain (it's transition matrix). For now, it is quite hard to point out exactly which data could serve that purpose. However, that's the importance of pointing out my proximity with the subject via my advisor. I strongly believe there is enough data to construct such matrices.\par
+The whole details about these models are quite long and out of the scope of this work, so, for now, it will only be treated briefly the core ideas such to contextualize and remark the importance of the objective of this work.\par
+In the aforesaid papers the problem of evasion in public transport system is addressed via multi-level optimization, that's it, an optimization model such that some variables follow some optimality rules. These rules are modeled after a Stackelberg Games approach for the dynamic between the transit authority and the passengers. In these cases, the public transport authorities are called the \textit{leader} and the passengers are the \textit{followers}. That is, the leader adopt a strategy against evasion, and the follower reacts to it. Inside the set of passengers of the follower, there are 2 main classes: opportunistic and not-opportunistic passengers. Obviously, the later are those unaffected by the transit authority variable policies, because their decision is always to not evade paying the tariff of the service. The other set of passengers will evade paying the tariff depending on the expected risk of being inspected, being fined in such case.\par
+More precisely, the authority goal is, in general, to determine the set of allocations for the inspection patrols in the public transit system such that on average their presence lowers the evasion (measured in the money the fines raise) the most, assuming the opportunistic passengers will evade while the risk of being inspected is low enough. The optimal solution of the problem involves a set of tuples $\{(\pi_s, X_s)\}_S$ where $S$ is the set of sets of inspection patrol allocations, $\pi_s$ is the probability on selecting this set of allocations, and $X_s$ is said set of allocations (each element of $X_s$ is a place, and it is assumed there is enough police men to visit each place at the same time). The probabilities $\pi_s$ are interpreted as the frequency that the locations in $X_s$ should be visited. So, these probabilities establish how frequent each of the policies $X_s$ should be applied. Their inverses establish between how many days said policy should be applied in the public transit system. The point of this model is to make as unpredictable as posible from the perspective of an opportunistic passenger.\par
+The complexity in the model comes not only by the quantum-like nature of the solution. It comes also by the fact that the model consider all \textit{type} of passengers independently, that is, there is a type of passenger for every pair of origins and destinations in the public transit system, so the total of passengers in a vehicle during a given time varies combinatorially, at least in some models.\par
+Now, the point on those papers was to model, to solve the multi-level optimization problem up to an $\epsilon$-optimal, and to give practical advice on how to apply these results in a practical setting. For the latter, they establish 2 main advices. The first, already stated, is that the probabilities $\{\pi_s\}_S$ gives the frequency that the asociated set of allocations $\{X_s\}_S$ should be implemented during a day as the places for the inspections patrols to patrol. The second advice is to estimate \textit{a posteriori} how much time it will take to reach the steady-state of the evasion rate, using a Monte Carlo simulation. That is, given the optimal probabilities, one can calculate the steady-state of the evasion rate, and then ask how much time it will take these set of policies modify the opportunistic passengers behavior in order to the empirical evasion rate converge to the one in steady-state.\par
+Lastly, but not least, is the fact that other papers of these topics (Security/Stackelberg games) are being develop at the time of writing this work, in which all consider the addition of an estimation of the time to converge to the steady state obtained during the optimization. More precisely, in words of my advisor, they have developed a general framework to solve these kind of multi-level optimization problems, aiming not only to the resolution \textit{per se} of said problem, but also on the practical implementation of these results. One part of this particular implementation involves the estimation of the time it will take to converge to the steady-state evasion rate. It is of interest because during new study cases it has been seen convergence times over the year interval, which is highly undesirable. That is because both these policies are expected to converge in midterm (less than a year) and because those simulations are expensive. Having to wait to guess how much time has to pass until a convergence to the steady-state evasion rate is not reliable, so the necessity of this work.
+
+\section*{Conclusion}
+The present works aims to determine another method, potentially more reliable, of obtaining the convergence time to the steady state of the evasion rate in a class of optimization problems related to the minimization of the evasion in the public transit system. The ambitions of this work are realistically doable in the short term, because there is immediate access to lots of data, in particular to all the probabilities related to the paths that the passengers could take, of the optimal inspections allocations, etc.\par
+The main tasks to be developed during this project is bot $(1)$ model the Markov Chain that, if exists, its stationary distribution gives information about the convergence time to the steady-state evasion rate of some problems of the aforementioned papers and $(2)$ solve empirically the involved equations and compare the results to the Monte Carlo simulations already done, so to verify results and performance. The simulations done in the papers that this work is based on are, in my opinion, not described in a exhaustive manner on how to reproduce them. Further discussions with the authors will be needed to ensure to fully understand what is going to be compare this work with.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%BIBLIOGRAPHY-------------------------------------
+
+\clearpage
+\phantomsection
+\bibliography{bibliografia}
+
+
+\end{document}
