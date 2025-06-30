@@ -261,25 +261,23 @@ The data set used in this work is the same as in \citep{Carrasco}. That is the c
 Following the author's analysis, lets fix $n=10$. One can compute the equilibrium IOR, obtaining that $Ior^* \approx 0.47681$. Then, both $\tau$ and $Ior(\tau)$ are computed, obtaining $\tau \approx 4.67541$ and $Ior(\tau) \approx 0.60012$. Considering $\tau+1$ instead, the IOR improves dramatically, to $Ior(\tau+1) \approx = 0.50752$. This may seem artificial, but serves as a compensation for the  oversimplification of considering $P$ block-diagonal, which holds accurate only near the equilibrium.\par
 Further experiments show that for $t < \tau$, one may obtain unrealistic values for IOR, such as $Ior(1) \approx 16$, or $Ior(2) \approx 5$. As a ratio, this number should always be not greater than $1$, but in the early stages of the iterations this could easily not be the case because some high-density cases for every site $j$ might occur at the same time.\par
 It is worth mentioning that for $t \gtrapprox 2\tau$, $Ior(t) \approx Ior^*$. So the transition matrix, at least in a limiting case, works as intended (the Markov IOR converges to the equilibrium one).\par
-Now, the same experiments were carried out for every $n \{ 1,2 \dots 15\}$. The results are resumed in. %\ref{table}.
-% \begin{table}\label{table}
-%   \begin{center}
-%     \begin{tabular}{ |c|c|c|c| } 
-%       \hline
-%       n & $\tau_n$ & $Ior(\tau_n)$ & $Ior_n^n$ \\ 
-%       \hline
-%       P-ASHA& $100$ & $0$ &$2034$& $2034$& 397,7 & 429,3 \\ 
-%       \hline
-%       D-ASHA& $100$ & $0$ &$155$& $155$& 29,8 & 32,1 \\ 
-%       \hline
-%       NSHA& $100$ & $0$ &$155$& $155$& 25,8 & 26,2 \\ 
-%       \hline
-%     \end{tabular}
-%   \end{center}
-%   \caption{Resultados Experimento 2.}
-% \end{table}
+Now, the same experiments were carried out for every $n \{ 1,2 \dots 15\}$. The results are shown in \ref{fig:tau_n} and \ref{fig:Ior_tau_n}.\par
+
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.9 \textwidth]{img/tau_n.png}
+	\caption{Plot of $\tau(n)$, for $n \in \{1, 2 \dots 15\}$.}
+	\label{fig:tau_n}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.9 \textwidth]{img/Ior_tau_n.png}
+	\caption{Plot of $Ior(\tau(n)+1)$, for $n \in \{1, 2 \dots 15\}$(green) and $Ior^*(n)$ (red), for reference.}
+	\label{fig:Ior_tau_n}
+\end{figure}
 
 From here, the analysis does not change essentially as $n$ changes, i.e., the Markov Chain converges rapidly towards the Nash Equilibrium.\par
+As reported in \cite{Carrasco}, for $n=10$ it is expected that after $58$ days the IOR hits the threshold of $52\%$ for the first time. This value is vastly greater than the theoretical $\approx 48\%$. This value is the best that the authorities expect to reduce the IOR, so it stays as the threshold for which any solution that achieves this value, or lesser, is considered a good solution. For other values of $n$ there has not been an extensive analysis, so it has been left out in this work aswell.\par
 
 \section{Conclusions}\label{sec5}
 It is clear that the Markov Model proposed has a very rapid convergence compared to the Montecarlo simulations. This may be due to the fact that the transition matrix $P$ is built very naively. Intuitively, the graph of a set of states approaching a Nash Equilibrium should look like an spring, i.e., said states should look like they are revolving around the equilibrium. That may not be the case for the way the transition matrix was built in this work, because it puts major weight towards the equilibrium, but does not address the fact that the momentum of a given state before absorption may induce higher probabilities to not converge immediately, if it is not near the equilibrium. Coming back to the spring comparison, an spring that is set off farther from its equilibrium will oscillate further. On other side, the analysis is still reasonable, as the IOR converges accordingly.\par
