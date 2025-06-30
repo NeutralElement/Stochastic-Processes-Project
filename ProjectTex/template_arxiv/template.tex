@@ -42,10 +42,10 @@
 % Or remove it
 %\date{}
 
-\author{ \href{https://orcid.org/0000-0000-0000-0000}{\includegraphics[scale=0.06]{orcid.pdf}\hspace{1mm} Nicolas I. Boyardi}\thanks{asdasd} \\
+\author{ \href{https://orcid.org/0000-0000-0000-0000}{\includegraphics[scale=0.06]{orcid.pdf}\hspace{1mm} Nicolas I. Boyardi Alache}\\
 	Department of Industrial Engineering\\
 	Universidad Técnico Federico Santa María\\
-	Pittsburgh, PA 15213 \\
+	Valparaíso, Chile\\
 	\texttt{nicolas.boyardi@usm.cl} \\
 	%% examples of more authors
 	%% \AND
@@ -68,7 +68,7 @@
 % Uncomment to override  the `A preprint' in the header
 %\renewcommand{\headeright}{Technical Report}
 %\renewcommand{\undertitle}{Technical Report}
-\renewcommand{\shorttitle}{Nash-based Markov Chain}
+\renewcommand{\shorttitle}{Stackelberg-Nash Markov Chain time stimation}
 
 %%% Add PDF metadata to help others organize their library
 %%% Once the PDF is generated, you can check the metadata with
@@ -92,16 +92,17 @@ This work aims to establish a second method to obtain the time it should take th
 
 
 % keywords can be removed
-\keywords{First keyword \and Second keyword \and More}
+\keywords{Markov Chain, Stackelberg games, Nash Equilibrium}
 
 \section{Introduction}
-In Game Theory, more precisely in Security Games, Stackelberg Games are used to represent problems involving 2 or more actors under a hierarchical relationship between them. For example, this setting is useful to model the problem of evasion in public transport systems \citep{FareInspection} \citep{BROTCORNE20211}. But it is also useful modeling.\par
+In Game Theory, more precisely in Security Games, Stackelberg Games are used to represent problems involving 2 or more actors under a hierarchical relationship between them. For example, but not limited to, it let us model the problem of evasion in public transport systems from the perspective of the transit authority \citep{FareInspection} \citep{BROTCORNE20211}. Another example is the work of \citep{Carrasco}, where a Stackelberg-Nash problem, which model the problem of street vending in the city of Valparaiso, Chile, is addressed. In any case, the operational implementation of the solution of the optimization problem rests on the construction of daily inspection schedules, which, in the long run, decreases the evasion rate (ER) or the Illegal Occupation Rate (IOR), respectively. Both the ER and the IOR represents the fraction of actors under an undesirable behavior (Percentage of persons evading paying the public transport tariff or of persons selling in the streets). Since there is limited resources to inspect, this daily schedules have to be implemented randomly daily for some time before it induces change in behavior. In that sense, it matters how fast this convergence occurs. To estimate that, Monte Carlo simulations were carried out, measuring the mean time it takes to have a daily ER or IOR less than some threshold.\par
+The present work aims to estimate the convergence time to the equilibrium IOR via Markov Chain absorption times. Here, a Markov chain is built around the Nash-Equilibrium density distribution of actors $\pp^*$, obtained through the optimal solution of the Stackelberg-Nash Problem. The chain replicates the behavior near the Nash Equilibrium, as the like of an harmonic oscillator.\par 
+This work is organized as follows. A brief resume on how the Nash Equilibrium is built is in \autoref{sec2}. \autoref{sec3} formulates a Markov Chain that approximates the dynamic of the Stackelberg-Nash game. \autoref{sec4} presents some actual computations based on the theory built in \autoref{sec3}. Finally, in \autoref{sec5} concludes this work presenting some conclusions and advice for future work.\par
 
 
-\section{The model}\label{sec2}
+\section{The Stackelberg-Nash model}\label{sec2}
 In this section will be discussed briefly where does the probabilities, that are used as parameters for the model in this work, came from. The model Stackelberg-Nash model discussed in the next section is a one-to-one replica of the one from \citep{Carrasco}, where the setting is the management of street vending in the city of Valparaíso, Chile. The understanding of the variables, that will be parameters later, involved in the Nash Equilibrium Problem is important for this work.\par
 
-\subsection{The Stackelberg-Nash Model}\label{sec2:SNG}
 From that, let $J$ be the set of sites where an action could take place (e.g. street vending). It is defined a subset $L \subsetneq J$ of authorized\footnote{Legal in the context of street vending, thus the capital $L$.} sites where the action is acceptable to occur, and $I\subsetneq J$ the subset of unauthorized sites where it is not acceptable. Obviously, $I \cap L = \emptyset$ and $I \cup L = L$. The attractiveness of a site $j \in J$ is defined by the parameter $B_j$, such that $\min_{i \in I} B_i > \max_{l \in L} B_l$. That is, the worst attractive unauthorized site is more attractive than the best authorized site. In terms of street vending it makes sense, because usually unauthorized places are cheaper because of lack of rental of place, flexibility, etc.\par
 Let $m$ be the number of actors acting over $J$. The distribution of the actors over the $J$ sites is represented by the vector $\pp = (p_j)_{j\in J} \in \mathbb{R}^{|J|}$, such that $\mathbb{1}_{|J|}^\top\pp = 1$ and $\pp \geq \mathbb{0}_{|J|}$.\par
 The objective of an authority is to thwart the actions of the subjects over unauthorized sites $I$. To do so, the authority counts with a small set of $n$ teams that induce aversion in the total attractiveness of a site. Let $\p_j$ be the probability of an intervesion ocurring in site $j \in J$, with a aversion of $\overline{W} \in \mathbb{R}$. In the same line, a total-atractiveness function $U(p_j \vert B_j, \p_j)$ is defined for every site $j \in J$. This function is strictly increasing in $B_j$; non-increasing in $p_j$, measuring the saturation on a spatial sense; and non-increasing in aversion, as higher probabilities of being inspectioned implies lower expected utility.\par
@@ -114,11 +115,11 @@ The Nash Equilibrium Problem that finds the distribution $\pp$ of actors, given 
 \end{align*} 
 The problem of finding optimal aversion probabilities $\p^*$ is discussed thoroughly in the aforementioned work of street vending. That discusion is out of the scope of this work, because both $\p^*$ and $\pp^*$ will be treated as parameters.\par
 
-\subsection{The Markov Model}
+\section{The Markov Model}\label{sec3}
 After doing the corresponding optimizations, it stays open the practical implementation of intervention teams given the aversion probabilities obtained. In \citep{Carrasco}, they interpreted probabilities of intervention as frequency, that is, the fraction of the days from a given time horizon that a given place must be inspected during those days. In addition, given the optimal Illegal Occupation Rate (IOR) $Ior^* := \sum\limits_{i \in I} p^*_i$, they asked how much time, considering a day-by-day implementation of the aversion probabilities, it will take to the actors drop the daily IOR $Ior(t)$ to the optimal.\par
-The only approach in said work was to do Monte-Carlo Simulation. The setting considered counting the fraction of time, until that day, that a given site has been intervened as the aversion probabilities. The probability of selecting a site $j$ is given by the optimal $\p^*_j$. By the Law of Large Numbers, this setting guarantees that $Ior(t) \rightarrow Ior^*$ as $t\rightarrow \infty$. So, day by day, they solved the Nash Equilibrium Problem $NE(t)$ with the aversion probabilities obtained by the Montecarlo Simulation. After that, they computed the actual IOR, $Ior(t)$, and stablished the convergence time as the first arrival under the optimal IOR $Ior^*$. That is, $\tau = \min \{t \;\vert\; Ior(t) < Ior^*\}$ is the time they considered has to pass until a day-by-day implementation of the aversion probabilities makes the actors converge to the Nash Equilibrium, in the IOR sense.\par
+The only approach in said work was to do Monte-Carlo Simulation. The setting considered counting the fraction of time, until that day, that a given site has been intervened as the aversion probabilities. The probability of selecting a site $j$ is given by the optimal $\p^*_j$. By the Law of Large Numbers, this setting guarantees that $Ior(t) \rightarrow Ior^*$ as $t\rightarrow \infty$. So, day by day, they solved the Nash Equilibrium Problem $NE(t)$ with the aversion probabilities obtained by the Montecarlo simulation. After that, they computed the actual IOR, $Ior(t)$, and obtained the convergence time as the first arrival under the optimal IOR $Ior^*$. That is, $\tau = \min \{t \;\vert\; Ior(t) < Ior^*\}$ is the time they considered has to pass until a day-by-day implementation of the aversion probabilities makes the actors converge to the Nash Equilibrium, in the IOR sense.\par
 In this section, an alternative method will be described to obtain the convergence time of the IOR, $\tau$.\par
-Let $\{X(j)_t\}_{t=\in \mathbb{N}, j \in J}$ be a Markov chain that represents the proportion of actors for every site $j$ at time $t$. So, $m\cdot X(j)_t \in \{0,1 \dots m\}$ is the quantity of actors in $j$ at $t$. It is asumed that for fixed $j$, $\{X(j)_{t}\}_{t=0}^m$ is a Markov Chain on its own. For any two $j \not= j^{'} \in J$, the Markov Chains defined are independently one to another.\par
+Let $\{X(j)_t\}_{t=\in \mathbb{N}, j \in J}$ be a Markov chain that represents the proportion of actors for every site $j$ at time $t$. So, $m\cdot X(j)_t \in \{0,1 \dots m\}$ is the quantity of actors in $j$ at $t$. It is assumed that for fixed $j$, $\{X(j)_{t}\}_{t=0}^m$ is a Markov Chain on its own. For any two $j \not= j^{'} \in J$, the Markov Chains defined are independently one to another.\par
 
 \subsubsection{Transition Matrix}
 In this section, the construction of the transition matrix is addressed.
@@ -192,12 +193,12 @@ The graph of $P(j_1)_{ab}$ is shown as a function of $b$ in figure \ref{fig:func
 \begin{figure}[h!]
     \centering
     \includegraphics[width = 14 cm]{img/geogebra-export (5).pdf}
-    \caption{Example of the conditional probabilities $P(j)_{ab}$, for fixed $j$, $a$, $p^*_j$ and for $b \in \{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8\}$. The dotted lines shows the continuous interpolator of the distribution probabilities.}
+    \caption{Example of the conditional probabilities $P(j)_{ab}$, for fixed $j$, $a$, $p^*_j$ and for $b \in \{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8\}$. The dotted lines shows the continuous interpolator of the conditional probabilities.}
 	\label{fig:function}
 \end{figure} 
 
 \subsubsection*{Absorption times and convergence}
-It is easy to see that every transition matrix in the diagonal of $P$, $P(j)$, has an absorbent class of at most 2 elements. The absorbent class usually consists of the nearest element in the lattice $\{0,\frac{1}{m}, \dots, 1\}$ to $p^*_j$, or the 2 nearest elements, if it turns out to be the case (because of roundings, numerical errors, etc.).\par
+It is easy to see that every transition matrix in the diagonal of $P$, $P(j)$, has an absorbing class of at most 2 elements. The absorbing class usually consists of the nearest element in the lattice $\{0,\frac{1}{m}, \dots, 1\}$ to $p^*_j$, or the 2 nearest elements, if it turns out to be the case (because of roundings, numerical errors, etc.).\par
 So, with respect to $P$, it is easy to see that after reordering its entries according to the canonical form the matrix $Q$ of $P$ is given in terms of the matrices $Q(j)$ of each $j$-th Markov Chain in the diagonal of $P$:
 
 \begin{align*}
@@ -244,7 +245,7 @@ Again, by the diagonality of $P$, this expected time reduces to:
 where $l(j)$ is equal to the quantity of transient states of the $j$-th Markov Chain, that is, $m+1 - Abs(j)$. So, $l = \sum\limits_{j \in J} l(j) = (m+1)|J|- Abs$, where $Abs = \sum\limits_{j \in J} Abs(j)$ is the total quantity of absorbing states over $P$.\par
 
 \subsubsection{Illegal Occupation rate}
-Now everything is available to compute the IOR with respect to the absorbing time $\tau$. Asuming that the initial distribution of actors across the $|J|$ sites is uniformly distributed, observe that:
+Now everything is available to compute the IOR with respect to the absorbing time $\tau$. Assuming that the initial distribution of actors across the $|J|$ sites is uniformly distributed, observe that:
 \begin{align*}
 	Ior(\tau) 	&= \E\left(\sum\limits_{i \in I} X(i)_{\lceil \tau \rfloor}\right),\\
 				&= \sum\limits_{i \in I} \E(X(i)_{\lceil \tau \rfloor}),\\
@@ -255,14 +256,16 @@ Now everything is available to compute the IOR with respect to the absorbing tim
 \end{align*}
 where $\vv = (0, 1, \dots, m)/m \in \mathds{R}^{m+1}$.\par
 
-\section{Numerical Experiments}
-The data set used in this work is the same as in \citep{Carrasco}. That is, $n=10$, $m = 974$, and the optimal probabilities $\pp^*$. The rest of parameters is not important to be clarified here, as they only matter to calculate $\pp^*$, which, by this part of this work are assumed to be known.\par
+\section{Numerical Experiments}\label{sec4}
+The data set used in this work is the same as in \citep{Carrasco}. That is, $n=10$, $m = 974$, $|I| = 102$, $|L| = 40$ and the optimal probabilities $\pp^*$. The rest of parameters is not important to be clarified here, as they only matter to calculate $\pp^*$, which, by this part of this work are assumed to be known.\par
 With these parameters, one can compute the equilibrium IOR, obtaining that $Ior^* \approx 0.47681$ it is obtained that $\tau \approx 4.67541$, and that $Ior(\tau) \approx 0.60012$. Considering $\tau+1$ instead, the IOR improves dramatically, to $Ior(\tau+1) \approx = 0.50752$. This may seem artificial, but serves as a compensation for the oversimplification of considering $P$ block-diagonal, which is true only near the equilibrium. Further experiments show that for $t < \tau$, one may obtain unreallistic values for the IOR, such as $Ior(1) \approx 16$. As a ratio, this number should always be not greater than $1$, but in the early stages of the iterations this does not happen because some imposible states may occur, such as all sites $j$ having a ratio exactly equal to $1$. It is worth mentioning that for $t \gtrapprox 2\tau$, $Ior(t) \approx Ior^*$. So the transition matrix, at least in a limiting case, works as intended (the Markov IOR converges to the equilibrium one).\par
-\section{Conclusions}
-It is clear that the Markov Model proposed has a very rapid convergence compared to the Montecarlo Simulations. This may be due to the fact that the transition matrix $P$ is built very naively. Intuitively, the graph of a set of states approaching a Nash Equilibrium should look like an spring, i.e., said states should look like they are revolving around the equilibrium. That may not be the case for the way the transition matrix was built in this work ,because it puts mayor weigth towards the equilibrium, but does not adress the fact that the momentum of a given state before absorption may induce higher probabilities to not converge inmediatly, if it is not near the equilibrium. Coming back to the spring comparison, an spring that is set off farther from its equilibrium will oscilate further. On other side, the analysis is still reasonable, as the IOR converges accordingly.\par
+
+\section{Conclusions}\label{sec5}
+It is clear that the Markov Model proposed has a very rapid convergence compared to the Montecarlo simulations. This may be due to the fact that the transition matrix $P$ is built very naively. Intuitively, the graph of a set of states approaching a Nash Equilibrium should look like an spring, i.e., said states should look like they are revolving around the equilibrium. That may not be the case for the way the transition matrix was built in this work, because it puts major weight towards the equilibrium, but does not address the fact that the momentum of a given state before absorption may induce higher probabilities to not converge immediately, if it is not near the equilibrium. Coming back to the spring comparison, an spring that is set off farther from its equilibrium will oscillate further. On other side, the analysis is still reasonable, as the IOR converges accordingly.\par
+It is known that the optimal IOR depends on the number of teams, $n$. Varying this parameter, and obtaining new optimal distributions $\pp^*(n)$, will offer more instances to compare the effectiveness of the proposed method.
 Improvements would come from a better modeling of the transition matrix, as described in the last paragraph.\par 
 
-\section{Postscript}
+\section*{Code}
 The Python programmes used in the computations of this work are up in \href{https://github.com/NeutralElement/Stochastic-Processes-Project}{this github repository}.
 
 \newpage
