@@ -75,7 +75,7 @@
 %%% $ pdfinfo template.pdf
 \hypersetup{
 pdftitle={A template for the arxiv style},
-pdfauthor={Nicolás I. Boyardi},
+pdfauthor={Nicolás I. Boyardi Alache},
 pdfkeywords={Markov Chain, Stackelberg games, Nash Equilibrium},
 }
 
@@ -121,7 +121,7 @@ The only approach in said work was to do Monte-Carlo Simulation. The setting con
 In this section, an alternative method will be described to obtain the convergence time of the IOR, $\tau$.\par
 Let $\{X(j)_t\}_{t=\in \mathbb{N}, j \in J}$ be a Markov chain that represents the proportion of actors for every site $j$ at time $t$. So, $m\cdot X(j)_t \in \{0,1 \dots m\}$ is the quantity of actors in $j$ at $t$. It is assumed that for fixed $j$, $\{X(j)_{t}\}_{t=0}^m$ is a Markov Chain on its own. For any two $j \not= j^{'} \in J$, the Markov Chains defined are independently one to another.\par
 
-\subsubsection{Transition Matrix}
+\subsection{Transition Matrix}
 In this section, the construction of the transition matrix is addressed.
 Let $P \in \mathbb{R}^{(m+1+|J|)^2}$ be the transition matrix of the Markov Chain $\{X(j)_t\}_{t \in \mathds{N}, j \in J}$. As the Markov Chain measures quantity (and does not model individually every actor), it is assumed that $P$ is a block-diagonal matrix, having $|J|$ diagonal blocks $P(j) \in \mathbb{R}^{(m+1)^2}$:\par
 \begin{align*}
@@ -197,7 +197,7 @@ The graph of $P(j_1)_{ab}$ is shown as a function of $b$ in figure \ref{fig:func
 	\label{fig:function}
 \end{figure} 
 
-\subsubsection*{Absorption times and convergence}
+\subsection*{Absorption times and convergence}
 It is easy to see that every transition matrix in the diagonal of $P$, $P(j)$, has an absorbing class of at most 2 elements. The absorbing class usually consists of the nearest element in the lattice $\{0,\frac{1}{m}, \dots, 1\}$ to $p^*_j$, or the 2 nearest elements, if it turns out to be the case (because of roundings, numerical errors, etc.).\par
 So, with respect to $P$, it is easy to see that after reordering its entries according to the canonical form the matrix $Q$ of $P$ is given in terms of the matrices $Q(j)$ of each $j$-th Markov Chain in the diagonal of $P$:
 
@@ -244,7 +244,7 @@ Again, by the diagonality of $P$, this expected time reduces to:
 \end{align*}
 where $l(j)$ is equal to the quantity of transient states of the $j$-th Markov Chain, that is, $m+1 - Abs(j)$. So, $l = \sum\limits_{j \in J} l(j) = (m+1)|J|- Abs$, where $Abs = \sum\limits_{j \in J} Abs(j)$ is the total quantity of absorbing states over $P$.\par
 
-\subsubsection{Illegal Occupation rate}
+\subsection{Illegal Occupation rate}
 Now everything is available to compute the IOR with respect to the absorbing time $\tau$. Assuming that the initial distribution of actors across the $|J|$ sites is uniformly distributed, observe that:
 \begin{align*}
 	Ior(\tau) 	&= \E\left(\sum\limits_{i \in I} X(i)_{\lceil \tau \rfloor}\right),\\
@@ -252,17 +252,37 @@ Now everything is available to compute the IOR with respect to the absorbing tim
 				&= \sum\limits_{i \in I} \sum\limits_{b} \p(X(i)_{\lceil \tau \rfloor} = b)\cdot b,\\
 				&= \sum\limits_{i \in I} \sum\limits_{b}\sum\limits_{a} \underbrace{\p(X(i)_{\lceil \tau \rfloor} = b \; \vert \;\;X(i)_{0} = a)}_{ = P^{{\lceil \tau \rfloor}}_{ab}(i)} \cdot \p(X(i)_0 = a)\cdot b,\\
 				&= \sum\limits_{i \in I} \sum\limits_{a}\sum\limits_{b} \frac{1}{m+1}P^{{\lceil \tau \rfloor}}_{ab}(i)\cdot b,\\
-				&= \sum\limits_{i \in I} \frac{\mathbb{1}_{|I|}^{\top}P^{{\lceil \tau \rfloor}}_{ab}(i)\vv}{m+1},\\
+				&= \sum\limits_{i \in I} \frac{\mathbb{1}_{|I|}^{\top}P^{{\lceil \tau \rfloor}}(i)\vv}{m+1},\\
 \end{align*}
 where $\vv = (0, 1, \dots, m)/m \in \mathds{R}^{m+1}$.\par
 
 \section{Numerical Experiments}\label{sec4}
-The data set used in this work is the same as in \citep{Carrasco}. That is, $n=10$, $m = 974$, $|I| = 102$, $|L| = 40$ and the optimal probabilities $\pp^*$. The rest of parameters is not important to be clarified here, as they only matter to calculate $\pp^*$, which, by this part of this work are assumed to be known.\par
-With these parameters, one can compute the equilibrium IOR, obtaining that $Ior^* \approx 0.47681$ it is obtained that $\tau \approx 4.67541$, and that $Ior(\tau) \approx 0.60012$. Considering $\tau+1$ instead, the IOR improves dramatically, to $Ior(\tau+1) \approx = 0.50752$. This may seem artificial, but serves as a compensation for the oversimplification of considering $P$ block-diagonal, which is true only near the equilibrium. Further experiments show that for $t < \tau$, one may obtain unreallistic values for the IOR, such as $Ior(1) \approx 16$. As a ratio, this number should always be not greater than $1$, but in the early stages of the iterations this does not happen because some imposible states may occur, such as all sites $j$ having a ratio exactly equal to $1$. It is worth mentioning that for $t \gtrapprox 2\tau$, $Ior(t) \approx Ior^*$. So the transition matrix, at least in a limiting case, works as intended (the Markov IOR converges to the equilibrium one).\par
+The data set used in this work is the same as in \citep{Carrasco}. That is the common parameters $m = 974$, $|I| = 102$ and $|L| = 40$ and the varying parameter $n \in\{1, 2 \dots 15\}$ and the optimal probabilities $\pp^*(n)$.\par
+Following the author's analysis, lets fix $n=10$. One can compute the equilibrium IOR, obtaining that $Ior^* \approx 0.47681$. Then, both $\tau$ and $Ior(\tau)$ are computed, obtaining $\tau \approx 4.67541$ and $Ior(\tau) \approx 0.60012$. Considering $\tau+1$ instead, the IOR improves dramatically, to $Ior(\tau+1) \approx = 0.50752$. This may seem artificial, but serves as a compensation for the  oversimplification of considering $P$ block-diagonal, which holds accurate only near the equilibrium.\par
+Further experiments show that for $t < \tau$, one may obtain unrealistic values for IOR, such as $Ior(1) \approx 16$, or $Ior(2) \approx 5$. As a ratio, this number should always be not greater than $1$, but in the early stages of the iterations this could easily not be the case because some high-density cases for every site $j$ might occur at the same time.\par
+It is worth mentioning that for $t \gtrapprox 2\tau$, $Ior(t) \approx Ior^*$. So the transition matrix, at least in a limiting case, works as intended (the Markov IOR converges to the equilibrium one).\par
+Now, the same experiments were carried out for every $n \{ 1,2 \dots 15\}$. The results are resumed in. %\ref{table}.
+% \begin{table}\label{table}
+%   \begin{center}
+%     \begin{tabular}{ |c|c|c|c| } 
+%       \hline
+%       n & $\tau_n$ & $Ior(\tau_n)$ & $Ior_n^n$ \\ 
+%       \hline
+%       P-ASHA& $100$ & $0$ &$2034$& $2034$& 397,7 & 429,3 \\ 
+%       \hline
+%       D-ASHA& $100$ & $0$ &$155$& $155$& 29,8 & 32,1 \\ 
+%       \hline
+%       NSHA& $100$ & $0$ &$155$& $155$& 25,8 & 26,2 \\ 
+%       \hline
+%     \end{tabular}
+%   \end{center}
+%   \caption{Resultados Experimento 2.}
+% \end{table}
+
+From here, the analysis does not change essentially as $n$ changes, i.e., the Markov Chain converges rapidly towards the Nash Equilibrium.\par
 
 \section{Conclusions}\label{sec5}
 It is clear that the Markov Model proposed has a very rapid convergence compared to the Montecarlo simulations. This may be due to the fact that the transition matrix $P$ is built very naively. Intuitively, the graph of a set of states approaching a Nash Equilibrium should look like an spring, i.e., said states should look like they are revolving around the equilibrium. That may not be the case for the way the transition matrix was built in this work, because it puts major weight towards the equilibrium, but does not address the fact that the momentum of a given state before absorption may induce higher probabilities to not converge immediately, if it is not near the equilibrium. Coming back to the spring comparison, an spring that is set off farther from its equilibrium will oscillate further. On other side, the analysis is still reasonable, as the IOR converges accordingly.\par
-It is known that the optimal IOR depends on the number of teams, $n$. Varying this parameter, and obtaining new optimal distributions $\pp^*(n)$, will offer more instances to compare the effectiveness of the proposed method.
 Improvements would come from a better modeling of the transition matrix, as described in the last paragraph.\par 
 
 \section*{Code}
